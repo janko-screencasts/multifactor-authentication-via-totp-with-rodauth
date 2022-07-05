@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_02_20_104732) do
+ActiveRecord::Schema[7.0].define(version: 2022_07_05_114155) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "plpgsql"
@@ -19,6 +19,12 @@ ActiveRecord::Schema[7.0].define(version: 2022_02_20_104732) do
     t.string "key", null: false
     t.string "login", null: false
     t.datetime "deadline", null: false
+  end
+
+  create_table "account_otp_keys", force: :cascade do |t|
+    t.string "key", null: false
+    t.integer "num_failures", default: 0, null: false
+    t.datetime "last_use", default: -> { "CURRENT_TIMESTAMP" }, null: false
   end
 
   create_table "account_password_reset_keys", force: :cascade do |t|
@@ -55,6 +61,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_02_20_104732) do
   end
 
   add_foreign_key "account_login_change_keys", "accounts", column: "id"
+  add_foreign_key "account_otp_keys", "accounts", column: "id"
   add_foreign_key "account_password_reset_keys", "accounts", column: "id"
   add_foreign_key "account_remember_keys", "accounts", column: "id"
   add_foreign_key "account_verification_keys", "accounts", column: "id"
